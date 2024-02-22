@@ -24,7 +24,7 @@ const Signup = () => {
 
         try {
             const { user } = await createAuthUserWithEmailAndPassword(email, password);
-            const userDocRef = await createUserDocumentFromAuth(user, {displayName});
+            await createUserDocumentFromAuth(user, {displayName});
             resetFormFields();
         } catch (err) {
             if(err.code === 'auth/email-already-in-use') {
@@ -46,6 +46,7 @@ const Signup = () => {
   return (
     <div className="signup-container">
       <h2>Don't have an account?</h2>
+      <span>Sign up with your email and password</span>
       <form onSubmit={handleSubmit}>
 
         <FormInput label={'Display Name'} type="text" required onChange={handleOnChange} name="displayName" value={displayName} />
