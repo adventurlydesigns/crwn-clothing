@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import { signInWithGooglePopup, createUserDocumentFromAuth, signInAuthUserWithEmailAndPassword } from '../../utils/firebase/firebase.utils';
 import FormInput from '../form-input/form-input.component';
 import './signin.styles.scss';
@@ -14,25 +14,29 @@ const Signin = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-
+    
         try {
-            const response = await signInAuthUserWithEmailAndPassword(email, password);
-            resetFormFields();
-        } catch (err) {
-            switch(err.code) {
-                case 'auth/invalid-credential':
-                    alert('Email and/or password are incorrect');
-                    break;
-                case 'auth/user-not-found':
-                    alert('User not found');
-                    break;
-            }
+          const { user } = await signInAuthUserWithEmailAndPassword(
+            email,
+            password
+          );
+          resetFormFields();
+        } catch (error) {
+          switch (error.code) {
+            case 'auth/wrong-password':
+              alert('incorrect password for email');
+              break;
+            case 'auth/user-not-found':
+              alert('no user associated with this email');
+              break;
+            default:
+              console.log(error);
+          }
         }
-    }
+      };
 
     const signInWithGoogle = async () => {
         const {user} = await signInWithGooglePopup();
-        await createUserDocumentFromAuth(user);
     }
 
     const handleOnChange = (event) => {
